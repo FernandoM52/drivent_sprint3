@@ -1,10 +1,10 @@
 
+import { notFoundError } from "@/errors";
+import { paymentError } from "@/errors/payment-error";
 import { invalidParamsError } from "@/errors/invalid-params-error";
 import { TicketStatus } from "@prisma/client";
-import { paymentError } from "@/errors/payment-error";
 import enrollmentsService from "../enrollments-service";
 import ticketsRepository from "@/repositories/tickets-repository";
-import { notFoundError } from "@/errors";
 import hotelsRepository from "@/repositories/hotels-repository";
 
 async function getHotelsByTicketUser(userId: number) {
@@ -25,7 +25,28 @@ async function getHotelsByTicketUser(userId: number) {
 async function getHotelById(userId: number, hotelId: number) {
   if (isNaN(hotelId) || hotelId < 0) throw invalidParamsError();
 
+  await getHotelsByTicketUser(userId);
 
+  const hotelWithRooms = await hotelsRepository.findRoomsByHotelId(hotelId);
+  if (!hotelWithRooms) throw notFoundError();
+
+  const { id, name, image, createdAt, updatedAt, Rooms } = hotelWithRooms;
+  return {
+    id,
+    name,
+    image,
+    createdAt: createdAt.toISOString(),
+    updatedAt: updatedAt.toISOString(),
+    Rooms: Rooms.length > 0
+      ? Rooms.map((room) => {
+        return {
+          ...room,
+          createdAt: room.createdAt.toISOString(),
+          updatedAt: room.updatedAt.toISOString(),
+        };
+      })
+      : []
+  };
 }
 
 const hotelsService = {
