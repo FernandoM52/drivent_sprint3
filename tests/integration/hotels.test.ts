@@ -275,7 +275,6 @@ describe('GET /hotels/:hotelId', () => {
     it('should respond with status 402 when user ticket type is remote', async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
-      const id = faker.datatype.number({ min: 1, max: 10 });
 
       const enrollment = await createEnrollmentWithAddress(user);
       const ticketType = await createTicketTypeRemote();
