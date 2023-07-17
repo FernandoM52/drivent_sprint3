@@ -5,7 +5,7 @@ import { Response } from "express";
 export async function getHotels(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
 
-  const hotels = await hotelsService.getHotelsByTicketUser(userId);
+  const hotels = await hotelsService.getHotels(userId);
   res.send(hotels);
 }
 

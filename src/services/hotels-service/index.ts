@@ -7,7 +7,7 @@ import enrollmentsService from "../enrollments-service";
 import ticketsRepository from "@/repositories/tickets-repository";
 import hotelsRepository from "@/repositories/hotels-repository";
 
-async function getHotelsByTicketUser(userId: number) {
+async function getHotels(userId: number) {
   const enrollment = await enrollmentsService.getEnrollmentByUserId(userId);
 
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
@@ -25,7 +25,7 @@ async function getHotelsByTicketUser(userId: number) {
 async function getHotelById(userId: number, hotelId: number) {
   if (isNaN(hotelId) || hotelId < 0) throw invalidParamsError();
 
-  await getHotelsByTicketUser(userId);
+  await getHotels(userId);
 
   const hotelWithRooms = await hotelsRepository.findRoomsByHotelId(hotelId);
   if (!hotelWithRooms) throw notFoundError();
@@ -50,7 +50,7 @@ async function getHotelById(userId: number, hotelId: number) {
 }
 
 const hotelsService = {
-  getHotelsByTicketUser,
+  getHotels,
   getHotelById
 }
 
