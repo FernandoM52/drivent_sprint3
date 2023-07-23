@@ -82,7 +82,7 @@ describe('GET /enrollments', () => {
 describe('GET /enrollments/cep', () => {
   it('should respond with status 200 when CEP is valid', async () => {
     const response = await server.get('/enrollments/cep?cep=04538132');
-    const address = createhAddressWithCEP();
+    const address = await createhAddressWithCEP();
 
     expect(response.status).toBe(httpStatus.OK);
     expect(response.body).toEqual(address);
