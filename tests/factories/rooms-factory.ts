@@ -12,3 +12,9 @@ export async function createRooms(hotelId: number) {
     }
   })
 }
+
+export async function findRoomsByHotelId(hotelId: number) {
+  return prisma.room.findMany({
+    where: { hotelId }
+  });
+}

@@ -8,10 +8,9 @@ export async function createBooking(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
   const { roomId } = req.body as BookingBody;
 
-  if (!roomId) return res.sendStatus(httpStatus.NOT_FOUND);
 
   const booking = await bookingService.createBooking(userId, roomId);
-  res.send(booking.id);
+  res.send({ bookingId: booking.id });
 }
 
 export async function updateBooking(req: AuthenticatedRequest, res: Response) {
