@@ -1,7 +1,7 @@
 import { prisma } from "@/config";
-import { createBookingParams } from "@/protocols";
+import { createOrUpdateBookingParams } from "@/protocols";
 
-async function create(booking: createBookingParams) {
+async function create(booking: createOrUpdateBookingParams) {
   return prisma.booking.create({
     data: booking
   });
@@ -10,6 +10,16 @@ async function create(booking: createBookingParams) {
 async function countBookingsByRoomId(roomId: number) {
   return prisma.booking.count({
     where: { roomId }
+  });
+}
+
+async function updateBooking(bookingId: number, roomId: number) {
+  return prisma.booking.update({
+    data: {
+      roomId,
+      updatedAt: new Date(Date.now())
+    },
+    where: { id: bookingId }
   });
 }
 
@@ -22,11 +32,11 @@ async function findBookingByUserId(userId: number) {
     where: { userId }
   });
 }
-
 const bookingRepository = {
   create,
   countBookingsByRoomId,
-  findBookingByUserId
+  findBookingByUserId,
+  updateBooking
 }
 
 export default bookingRepository;

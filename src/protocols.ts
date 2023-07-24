@@ -67,7 +67,7 @@ export type BookingBody = {
   roomId: number;
 }
 
-export type createBookingParams = {
+export type createOrUpdateBookingParams = {
   userId: number;
   roomId: number,
 }

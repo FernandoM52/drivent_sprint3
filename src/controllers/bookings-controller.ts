@@ -21,7 +21,7 @@ export async function updateBooking(req: AuthenticatedRequest, res: Response) {
   if (!roomId) return res.sendStatus(httpStatus.UNPROCESSABLE_ENTITY);
 
   const booking = await bookingService.updateBooking(userId, Number(bookingId), roomId);
-  res.send(booking)
+  res.send({ bookingId: booking.id });
 }
 
 export async function getUserBooking(req: AuthenticatedRequest, res: Response) {
