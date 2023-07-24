@@ -1,5 +1,4 @@
 import { roomCapacityError, forbiddenError, notFoundError, paymentError } from "@/errors";
-import { createOrUpdateBookingParams } from "@/protocols";
 import bookingRepository from "@/repositories/booking-repository";
 import enrollmentRepository from "@/repositories/enrollment-repository";
 import roomRepository from "@/repositories/rooms-repository";
@@ -9,8 +8,7 @@ import { TicketStatus } from "@prisma/client";
 async function createBooking(userId: number, roomId: number) {
   await validateBooking(userId, roomId);
 
-  const bookingData: createOrUpdateBookingParams = { userId, roomId };
-  const booking = await bookingRepository.create(bookingData);
+  const booking = await bookingRepository.create(userId, roomId);
   await roomRepository.decrementRoomCapacity(roomId);
 
   return booking;

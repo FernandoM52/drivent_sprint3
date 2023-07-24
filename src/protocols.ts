@@ -66,8 +66,3 @@ export type InputTicketBody = {
 export type BookingBody = {
   roomId: number;
 }
-
-export type createOrUpdateBookingParams = {
-  userId: number;
-  roomId: number,
-}

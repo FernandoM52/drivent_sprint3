@@ -1,9 +1,8 @@
 import { prisma } from "@/config";
-import { createOrUpdateBookingParams } from "@/protocols";
 
-async function create(booking: createOrUpdateBookingParams) {
+async function create(userId: number, roomId: number) {
   return prisma.booking.create({
-    data: booking
+    data: { roomId, userId }
   });
 }
 

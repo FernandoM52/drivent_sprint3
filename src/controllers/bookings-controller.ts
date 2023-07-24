@@ -18,8 +18,6 @@ export async function updateBooking(req: AuthenticatedRequest, res: Response) {
   const { bookingId } = req.params;
   const { roomId } = req.body as BookingBody;
 
-  if (!roomId) return res.sendStatus(httpStatus.UNPROCESSABLE_ENTITY);
-
   const booking = await bookingService.updateBooking(userId, Number(bookingId), roomId);
   res.send({ bookingId: booking.id });
 }
