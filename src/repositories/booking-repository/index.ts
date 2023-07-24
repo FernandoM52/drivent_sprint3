@@ -13,10 +13,20 @@ async function countBookingsByRoomId(roomId: number) {
   });
 }
 
+async function findBookingByUserId(userId: number) {
+  return prisma.booking.findFirst({
+    select: {
+      id: true,
+      Room: true
+    },
+    where: { userId }
+  });
+}
+
 const bookingRepository = {
   create,
-  countBookingsByRoomId
-
+  countBookingsByRoomId,
+  findBookingByUserId
 }
 
 export default bookingRepository;

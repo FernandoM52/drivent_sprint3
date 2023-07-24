@@ -110,3 +110,16 @@ describe("Create booking tests", () => {
     });
   });
 });
+
+describe("Get booking tests", () => {
+  it("should throw notFoundError if user has no booking", async () => {
+    jest.spyOn(bookingRepository, "findBookingByUserId").mockResolvedValue(null);
+
+    const promise = bookingService.getUserBooking(1);
+    expect(bookingRepository.findBookingByUserId).toBeCalledTimes(1);
+    expect(promise).rejects.toEqual({
+      name: 'NotFoundError',
+      message: 'No result for this search!',
+    });
+  });
+});

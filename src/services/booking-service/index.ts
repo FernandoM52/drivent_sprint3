@@ -21,7 +21,10 @@ async function updateBooking(userId: number, bookingId: number, roomId: number) 
 }
 
 async function getUserBooking(userId: number) {
+  const userBooking = await bookingRepository.findBookingByUserId(userId);
+  if (!userBooking) throw notFoundError();
 
+  return userBooking;
 }
 
 async function validateBooking(userId: number, roomId: number) {
