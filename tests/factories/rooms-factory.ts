@@ -18,3 +18,14 @@ export async function findRoomsByHotelId(hotelId: number) {
     where: { hotelId }
   });
 }
+
+export function buildRoomReturn() {
+  return {
+    id: 1,
+    name: faker.name.findName(),
+    capacity: 4,
+    hotelId: 1,
+    createdAt: new Date(),
+    updatedAt: faker.date.future()
+  }
+}

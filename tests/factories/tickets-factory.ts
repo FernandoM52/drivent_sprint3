@@ -55,3 +55,24 @@ export async function createTicketTypeWithoutHotel() {
     },
   });
 }
+
+
+export function buildTicketReturn(status: TicketStatus, isRemote: boolean, includesHotel: boolean) {
+  return {
+    id: 1,
+    ticketTypeId: 1,
+    enrollmentId: +faker.datatype.number(),
+    status,
+    createdAt: new Date(),
+    updatedAt: faker.date.future(),
+    TicketType: {
+      id: 1,
+      name: faker.name.findName(),
+      price: +faker.datatype.number(),
+      isRemote,
+      includesHotel,
+      createdAt: new Date(),
+      updatedAt: faker.date.future()
+    }
+  }
+}

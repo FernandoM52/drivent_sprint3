@@ -7,40 +7,15 @@ async function create(booking: createBookingParams) {
   });
 }
 
-async function findRoomById(roomId: number) {
-  return prisma.room.findUnique({
-    where: { id: roomId },
-    include: { Booking: true }
-  });
-}
-
-async function decrementRoomCapacity(roomId: number) {
-  return prisma.room.update({
-    where: { id: roomId },
-    data: {
-      capacity: {
-        decrement: 1
-      }
-    },
-  });
-}
-
-async function incrementRoomCapacity(roomId: number) {
-  return prisma.room.update({
-    where: { id: roomId },
-    data: {
-      capacity: {
-        increment: 1
-      }
-    },
+async function countBookingsByRoomId(roomId: number) {
+  return prisma.booking.count({
+    where: { roomId }
   });
 }
 
 const bookingRepository = {
   create,
-  findRoomById,
-  decrementRoomCapacity,
-  incrementRoomCapacity,
+  countBookingsByRoomId
 
 }
 
