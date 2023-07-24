@@ -45,8 +45,8 @@ describe("Create booking tests", () => {
 
     const promise = bookingService.createBooking(1, 1);
     expect(promise).rejects.toEqual({
-      name: 'PaymentError',
-      message: 'You have not paid for your ticket yet',
+      name: 'ForbiddenError',
+      message: 'Insufficient rights to a resource',
     });
   });
 
@@ -59,8 +59,8 @@ describe("Create booking tests", () => {
 
     const promise = bookingService.createBooking(1, 1);
     expect(promise).rejects.toEqual({
-      name: 'PaymentError',
-      message: 'You have not paid for your ticket yet',
+      name: 'ForbiddenError',
+      message: 'Insufficient rights to a resource',
     });
   });
 
@@ -73,8 +73,8 @@ describe("Create booking tests", () => {
 
     const promise = bookingService.createBooking(1, 1);
     expect(promise).rejects.toEqual({
-      name: 'PaymentError',
-      message: 'You have not paid for your ticket yet',
+      name: 'ForbiddenError',
+      message: 'Insufficient rights to a resource',
     });
   });
 

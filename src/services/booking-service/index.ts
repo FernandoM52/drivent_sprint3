@@ -35,7 +35,7 @@ async function validateBooking(userId: number, roomId: number) {
   if (!ticket) throw notFoundError();
 
   const { isRemote, includesHotel } = ticket.TicketType;
-  if (ticket.status !== TicketStatus.PAID || isRemote || !includesHotel) throw paymentError();
+  if (ticket.status !== TicketStatus.PAID || isRemote || !includesHotel) throw forbiddenError();
 
   const room = await roomRepository.findRoomById(roomId);
   if (!room) throw notFoundError();
