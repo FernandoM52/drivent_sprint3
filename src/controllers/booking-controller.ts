@@ -2,7 +2,6 @@ import { Response } from 'express';
 import { AuthenticatedRequest } from '@/middlewares';
 import bookingService from '@/services/booking-service';
 import { BookingBody } from '@/protocols';
-import httpStatus from 'http-status';
 
 export async function createBooking(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;

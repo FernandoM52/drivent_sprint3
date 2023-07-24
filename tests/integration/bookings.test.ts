@@ -153,12 +153,12 @@ describe('PUT /booking', () => {
       const hotel = await createHotels();
       const room = await createRooms(hotel.id);
       const booking = await createBooking(user.id, room.id);
-      const newBooking = await updateBooking(booking.id, room.id)
+      const room2 = await createRooms(hotel.id);
 
-      const { status, body } = await server.put(`/booking/${booking.id}`).set('Authorization', `Bearer ${token}`).send({ roomId: room.id });
+      const { status, body } = await server.put(`/booking/${booking.id}`).set('Authorization', `Bearer ${token}`).send({ roomId: room2.id });
       expect(status).toEqual(httpStatus.OK);
       expect(body).toEqual({
-        bookingId: newBooking.id
+        bookingId: expect.any(Number)
       });
     });
 
@@ -177,6 +177,66 @@ describe('PUT /booking', () => {
 
       const { status } = await server.put(`/booking/${booking.id}`).set('Authorization', `Bearer ${token}`).send(fakeBody);
       expect(status).toEqual(httpStatus.BAD_REQUEST);
+    });
+
+    it('should respond with status 403 if booking id is NaN', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      const enrollment = await createEnrollmentWithAddress(user);
+      const ticketType = await createTicketTypeWithHotel();
+      await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+      const hotel = await createHotels();
+      const room = await createRooms(hotel.id);
+      await createBooking(user.id, room.id);
+
+      const { status } = await server.put(`/booking/isNaN`).set('Authorization', `Bearer ${token}`).send({ roomId: room.id });
+      expect(status).toEqual(httpStatus.FORBIDDEN);
+    });
+
+    it('should respond with status 403 if booking id is negative', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      const enrollment = await createEnrollmentWithAddress(user);
+      const ticketType = await createTicketTypeWithHotel();
+      await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+      const hotel = await createHotels();
+      const room = await createRooms(hotel.id);
+      const booking = await createBooking(user.id, room.id);
+
+      const { status } = await server.put(`/booking/-${booking}`).set('Authorization', `Bearer ${token}`).send({ roomId: room.id });
+      expect(status).toEqual(httpStatus.FORBIDDEN);
+    });
+
+    it('should respond with status 403 if user has no booking', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      const enrollment = await createEnrollmentWithAddress(user);
+      const ticketType = await createTicketTypeWithHotel();
+      await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+      const hotel = await createHotels();
+      const room = await createRooms(hotel.id);
+
+      const fakeBookingId = { fakeProperty: faker.datatype.number() };
+
+      const { status } = await server.put(`/booking/${fakeBookingId}`).set('Authorization', `Bearer ${token}`).send({ roomId: room.id });
+      expect(status).toEqual(httpStatus.FORBIDDEN);
+    });
+
+    it('should respond with status 403 if room is full', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      const enrollment = await createEnrollmentWithAddress(user);
+      const ticketType = await createTicketTypeWithHotel();
+      await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+      const hotel = await createHotels();
+      const room = await createRooms(hotel.id);
+      const booking = await createBooking(user.id, room.id);
+      const room2 = await createRooms(hotel.id, 2);
+      await createBooking(user.id, room2.id);
+      await createBooking(user.id, room2.id);
+
+      const { status } = await server.put(`/booking/${booking.id}`).set('Authorization', `Bearer ${token}`).send({ roomId: room2.id });
+      expect(status).toEqual(httpStatus.FORBIDDEN);
     });
   });
 

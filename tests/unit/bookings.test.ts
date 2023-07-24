@@ -36,7 +36,7 @@ describe("Create booking tests", () => {
     });
   });
 
-  it("should throw paymentError if user ticket has not been paid", async () => {
+  it("should throw ForbiddenError if user ticket has not been paid", async () => {
     const mockEnrollment: Enrollment = buildUserEnrollmentReturn();
     const ticket = buildTicketReturn(TicketStatus.RESERVED, false, true);
 
@@ -50,7 +50,7 @@ describe("Create booking tests", () => {
     });
   });
 
-  it("should throw paymentError if user ticket type is remote", async () => {
+  it("should throw ForbiddenError if user ticket type is remote", async () => {
     const mockEnrollment: Enrollment = buildUserEnrollmentReturn();
     const ticket = buildTicketReturn(TicketStatus.PAID, true, false);
 
@@ -64,7 +64,7 @@ describe("Create booking tests", () => {
     });
   });
 
-  it("should throw paymentError if user ticket does not include hotel", async () => {
+  it("should throw ForbiddenError if user ticket does not include hotel", async () => {
     const mockEnrollment: Enrollment = buildUserEnrollmentReturn();
     const ticket = buildTicketReturn(TicketStatus.PAID, false, false);
 
@@ -111,7 +111,7 @@ describe("Create booking tests", () => {
   });
 });
 
-describe("Get booking tests", () => {
+describe("GET booking tests", () => {
   it("should throw notFoundError if user has no booking", async () => {
     jest.spyOn(bookingRepository, "findBookingByUserId").mockResolvedValue(null);
 
@@ -120,6 +120,19 @@ describe("Get booking tests", () => {
     expect(promise).rejects.toEqual({
       name: 'NotFoundError',
       message: 'No result for this search!',
+    });
+  });
+});
+
+describe("PUT booking tests", () => {
+  it("should throw forbiddenError if user has no booking", async () => {
+    jest.spyOn(bookingRepository, "findBookingByUserId").mockResolvedValue(null);
+
+    const promise = bookingService.updateBooking(1, 1, 1);
+    expect(bookingRepository.findBookingByUserId).toBeCalledTimes(1);
+    expect(promise).rejects.toEqual({
+      name: 'ForbiddenError',
+      message: 'Insufficient rights to a resource',
     });
   });
 });

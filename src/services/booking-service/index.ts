@@ -1,4 +1,4 @@
-import { roomCapacityError, forbiddenError, notFoundError, paymentError } from "@/errors";
+import { roomCapacityError, forbiddenError, notFoundError } from "@/errors";
 import bookingRepository from "@/repositories/booking-repository";
 import enrollmentRepository from "@/repositories/enrollment-repository";
 import roomRepository from "@/repositories/rooms-repository";
@@ -9,22 +9,17 @@ async function createBooking(userId: number, roomId: number) {
   await validateBooking(userId, roomId);
 
   const booking = await bookingRepository.create(userId, roomId);
-  await roomRepository.decrementRoomCapacity(roomId);
-
   return booking;
 }
 
 async function updateBooking(userId: number, bookingId: number, roomId: number) {
-  if (isNaN(bookingId) || bookingId < 0) throw forbiddenError();
+  if (isNaN(bookingId) || bookingId <= 0) throw forbiddenError();
 
   const userBooking = await bookingRepository.findBookingByUserId(userId);
   if (!userBooking) throw forbiddenError();
 
   await validateBooking(userId, roomId);
   const booking = await bookingRepository.updateBooking(bookingId, roomId);
-
-  await roomRepository.incrementRoomCapacity(userBooking.Room.id);
-  await roomRepository.decrementRoomCapacity(roomId);
 
   return booking;
 }

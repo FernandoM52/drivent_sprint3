@@ -31,6 +31,7 @@ async function findBookingByUserId(userId: number) {
     where: { userId }
   });
 }
+
 const bookingRepository = {
   create,
   countBookingsByRoomId,
